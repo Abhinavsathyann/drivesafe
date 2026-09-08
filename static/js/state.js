@@ -34,6 +34,18 @@ const DriveSafeState = {
     framesCaptured: 0,
     lastFrameTimestamp: null,
     availableCameras: [],
+
+    // Phase 3 Computer Vision State
+    visionReady: false,
+    faceCount: 0,
+    faceQuality: 'UNKNOWN',
+    leftEyeFound: false,
+    rightEyeFound: false,
+    leftEyeCropValid: false,
+    rightEyeCropValid: false,
+    leftEAR: 0,
+    rightEAR: 0,
+    processTimeMs: 0,
   },
 
   // Settings
@@ -45,6 +57,9 @@ const DriveSafeState = {
     mirrorCamera: true,
     confidenceThreshold: 0.80,
     targetFPS: 10,
+    eyePaddingX: 0.3, // 30% horizontal padding
+    eyePaddingY: 0.3, // 30% vertical padding
+    showVisionOverlay: true,
   },
 
   // Session Statistics

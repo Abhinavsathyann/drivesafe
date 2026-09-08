@@ -7,6 +7,7 @@ function initializeApplication() {
   DriveSafeState.init();
   DriveSafeUI.init();
   attachEventListeners();
+  DriveSafeVision.init();
 
   // Enumerate cameras if supported
   if (DriveSafeCamera.isSupported()) {
@@ -108,6 +109,14 @@ function attachEventListeners() {
     });
   }
 
+  // Vision overlay toggle
+  const visionToggle = document.getElementById('vision-overlay-toggle');
+  if (visionToggle) {
+    visionToggle.addEventListener('change', (e) => {
+      DriveSafeState.saveSettings({ showVisionOverlay: e.target.checked });
+    });
+  }
+
   // Camera device selector in monitor
   const camSelect = document.getElementById('camera-device-select');
   if (camSelect) {
@@ -176,12 +185,24 @@ function onVideoReady(videoEl) {
   DriveSafeState.onCameraStarted(videoEl.videoWidth, videoEl.videoHeight);
   DriveSafeUI.render();
 
-  // Start Phase 2 frame pipeline extraction loop
+  const visionCanvas = document.getElementById('vision-overlay');
+  if (visionCanvas) {
+    visionCanvas.width = videoEl.videoWidth;
+    visionCanvas.height = videoEl.videoHeight;
+  }
+
+  // Start Phase 2 & 3 frame pipeline extraction loop
   DriveSafeCamera.startFramePipeline(
     DriveSafeState.settings.targetFPS || 10,
     (frame) => {
-      // Future Phase 3 hook:
-      // frame.imageData ready for face & eye detection
+      // Phase 3 hook: Process frame for face & eye detection
+      const result = DriveSafeVision.processFrame(videoEl, performance.now());
+      
+      if (visionCanvas && result) {
+        DriveSafeVision.drawOverlay(visionCanvas, result, DriveSafeState.settings.mirrorCamera);
+      }
+      
+      DriveSafeUI.render();
     },
     (diagnostics) => {
       DriveSafeState.setDiagnostics(diagnostics);
@@ -193,6 +214,13 @@ function onVideoReady(videoEl) {
 function stopMonitoring() {
   DriveSafeCamera.stopStream();
   DriveSafeState.stopMonitoring();
+  
+  const visionCanvas = document.getElementById('vision-overlay');
+  if (visionCanvas) {
+    const ctx = visionCanvas.getContext('2d');
+    ctx.clearRect(0, 0, visionCanvas.width, visionCanvas.height);
+  }
+
   DriveSafeUI.render();
 }
 

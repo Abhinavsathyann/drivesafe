@@ -1,4 +1,4 @@
-# DriveSafe AI — Phase 1: Project Architecture & Professional Web Foundation
+# DriveSafe AI — Phase 3: Real-Time Computer Vision
 
 **BCA College Final-Year Project Prototype**  
 **Real-Time Driver Drowsiness Detection Using Computer Vision and Machine Learning**
@@ -11,18 +11,18 @@
 
 ---
 
-## 1. Project Overview & Phase 1 Objective
+## 1. Project Overview & Phase 3 Objective
 
 DriveSafe AI investigates real-time driver drowsiness monitoring through webcam-based facial and eye-state analysis. The project is being developed across **10 strictly controlled phases**.
 
-**Phase 1 establishes**:
-* Complete application architecture, project directory layout, and separation of concerns.
-* Production-grade automotive-AI dashboard UI/UX design system with design tokens and high-contrast status colors (Green, Yellow, Orange, Red).
-* Reusable status components, active error-state architecture for 9 failure modes, and alert modal overlay.
-* Live camera placeholder with cockpit reticle and right-side eye analysis panel (OPEN/CLOSED/UNKNOWN).
-* Centralized frontend state architecture with clean functional transitions.
-* Architectural contracts and interface specifications for future Computer Vision (OpenCV/MediaPipe) and Machine Learning (TensorFlow/Keras) subsystems.
-* Dual-stack support: Fully functional React/TypeScript live application for the AI Studio preview alongside an executable Python Flask backend with vanilla HTML5/CSS3/JavaScript for college submission.
+**Phase 3 establishes**:
+* Real-time Face Detection and Facial Landmarking using browser-side MediaPipe Tasks Vision.
+* Left and right eye localization using standard physical eye coordinate mapping.
+* Eye bounding box extraction (crops) formatted as structured JSON for future ML classification.
+* Zero-latency privacy architecture: No video frames are transmitted over the network for detection.
+* Integration into the Phase 2 camera extraction pipeline at a configurable target FPS.
+* Live "Vision Overlay" canvas for visualizing face bounding boxes, eye landmarks, and eye crop regions.
+* Comprehensive UI diagnostics tracking face count, face quality, processing latency, and diagnostic EAR (Eye Aspect Ratio).
 
 ---
 
@@ -32,7 +32,7 @@ DriveSafe AI investigates real-time driver drowsiness monitoring through webcam-
 drivesafe-ai/
 │
 ├── app.py                      # Flask backend entry point & REST API endpoints
-├── requirements.txt            # Python dependencies (Flask, OpenCV, TensorFlow, etc.)
+├── requirements.txt            # Python dependencies
 ├── README.md                   # Comprehensive project documentation & viva guide
 ├── metadata.json               # Platform manifest & permissions
 ├── package.json                # Frontend package manifest & scripts
@@ -43,111 +43,72 @@ drivesafe-ai/
 ├── static/
 │   ├── css/
 │   │   ├── style.css           # Automotive dashboard styles & design tokens
-│   │   └── responsive.css      # Responsive media queries (Desktop/Laptop/Tablet/Mobile)
+│   │   └── responsive.css      # Responsive media queries
 │   ├── js/
 │   │   ├── state.js            # Centralized JavaScript state management
 │   │   ├── ui.js               # UI rendering & DOM updates
-│   │   └── app.js              # Application bootstrapper & event listeners
+│   │   ├── camera.js           # Hardware stream lifecycle & frame extraction (Phase 2)
+│   │   ├── vision.js           # Browser-side MediaPipe FaceLandmarker logic (Phase 3)
+│   │   └── app.js              # Application bootstrapper & event wiring
 │   └── assets/                 # Static icons and assets
 │
-├── src/                        # Interactive React + Tailwind preview application
-│   ├── types/
-│   │   └── drivesafe.ts        # TypeScript interfaces, enums & integration contracts
-│   ├── context/
-│   │   └── DriveSafeContext.tsx# Centralized state provider & state machine
-│   ├── components/
-│   │   ├── Navigation.tsx      # Sticky header, brand badge & tab routing
-│   │   ├── StatusBadge.tsx     # Reusable 4-state indicator (Green, Yellow, Orange, Red)
-│   │   ├── DashboardView.tsx   # Dashboard with 4 subsystem cards & 8-stage pipeline
-│   │   ├── MonitorView.tsx     # Central camera preview, eye panel & 5s timer
-│   │   ├── DrowsinessAlertModal.tsx # Safety warning modal with dismiss/stop controls
-│   │   ├── SessionsView.tsx    # Session metrics & planned chart wireframes
-│   │   ├── SettingsView.tsx    # Threshold slider, audio controls & future ML flags
-│   │   ├── AboutView.tsx       # Viva guide, project abstract & technology matrix
-│   │   └── ErrorStatesPanel.tsx# Diagnostic previewer for 9 system edge cases
-│   ├── App.tsx                 # Root React component
-│   └── main.tsx                # React entry point
-│
 ├── vision/
-│   ├── face_detection.py       # FaceDetectorInterface (Reserved for Phase 3)
-│   ├── eye_detection.py        # EyeDetectorInterface (Reserved for Phase 3)
-│   └── preprocessing.py        # EyePreprocessorInterface (Reserved for Phase 4)
+│   ├── face_detection.py       # Python backend structural stub
+│   └── eye_detection.py        # Python backend structural stub
 │
-├── ml/
-│   ├── dataset/README.md       # Dataset acquisition & splits (Phase 4)
-│   ├── training/README.md      # Training scripts & notebooks (Phase 5)
-│   ├── model/README.md         # Serialized CNN weights (.h5) (Phase 5/6)
-│   └── inference/
-│       └── predictor.py        # EyeStatePredictorInterface (Phase 6)
-│
-├── data/README.md              # Local telemetry data storage (Phase 8)
-├── notebooks/README.md         # Jupyter notebooks for model EDA (Phase 5)
 └── tests/
-    └── test_architecture.py   # Architecture & contract unit test suite
+    └── test_architecture.py    # Architecture & contract unit test suite
 ```
 
 ---
 
-## 3. Installation Instructions
+## 3. Installation & Run Instructions
 
-### Method A: Running with Python & Flask (College Submission / Local Server)
+### Method: Running with Python & Flask (College Submission)
 
 1. **Prerequisites**: Python 3.10+ installed.
-2. **Create a virtual environment**:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate    # On Windows: venv\Scripts\activate
-   ```
-3. **Install Phase 1 Python dependencies**:
+2. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
-
-### Method B: Running with Node.js & Vite (Interactive Web Preview)
-
-1. **Prerequisites**: Node.js 18+ installed.
-2. **Install Node dependencies**:
+3. **Start the Flask Application**:
    ```bash
-   npm install
+   python app.py
    ```
+   Open your browser and navigate to: `http://localhost:5000`
 
----
-
-## 4. Run Instructions
-
-### Starting the Flask Application:
-```bash
-python app.py
-```
-Open your browser and navigate to: `http://localhost:5000`
-
-### Starting the Node/Vite Dev Server:
-```bash
-npm run dev
-```
-Open your browser and navigate to: `http://localhost:3000`
-
-### Running the Phase 1 Architectural Tests:
+### Running the Architectural Tests:
 ```bash
 python -m unittest tests/test_architecture.py
 ```
 
 ---
 
-## 5. Implemented Features (Phase 1 Only)
+## 4. Architecture Note: Browser-Side Computer Vision
 
-* **Design System**: High-contrast, automotive dark cockpit theme using CSS variables and Tailwind tokens.
-* **Top Navigation**: Responsive navigation with tabs (`Dashboard`, `Monitor`, `Sessions`, `Settings`, `About`) and a dynamic `START MONITORING` CTA.
-* **Main Dashboard**: System ready status, 4 primary summary status cards (`Camera Status: NOT CONNECTED`, `Face Detection: WAITING`, `Eye Analysis: WAITING`, `Drowsiness Status: NOT MONITORING`), 8-stage pipeline architecture diagram, and 10-phase project progress tracker.
-* **Live Monitor Interface**: Central camera preview with alignment crosshair and corner brackets, overlay badges, right-side eye analysis panel (`LEFT EYE: UNKNOWN`, `RIGHT EYE: UNKNOWN`, `EYE CLOSURE: 0.0 sec`, `ML CONFIDENCE: —`, `DROWSINESS RISK: UNKNOWN`).
-* **Drowsiness Timer UI**: `Eye Closure Duration: 00.0s`, `Alert Threshold: 05.0s`, `Progress: 0%`, accompanied by clear documentation of the 5-second temporal detection logic.
-* **Status System**: 4 primary visual states (`GREEN: ALERT / ATTENTIVE`, `YELLOW: MONITORING`, `ORANGE: POSSIBLE DROWSINESS`, `RED: DROWSINESS ALERT`) plus system states (`UNKNOWN`, `NOT MONITORING`, `CAMERA ERROR`, `FACE NOT DETECTED`, `EYE NOT DETECTED`, `MODEL UNAVAILABLE`).
-* **Alert UI Modal**: High-contrast warning modal with header, description, and action buttons (`[ DISMISS ]` and `[ STOP MONITORING ]`), testable via a dedicated test button without faking detections.
-* **Session Statistics View**: Baseline session metrics (`00:00 duration`, `0 events`, `— peak closure`, `— average confidence`), realistic empty state, and 4 wireframe chart containers for future Phase 8 analytics.
-* **Settings View**: Configurable alert threshold (1.0s – 10.0s, default 5.0s), audio toggle, volume slider (default 80%), camera device selector, mirror toggle, with persistent `localStorage` synchronization. Clearly tags future ML settings.
-* **About & College Viva Section**: Abstract, disclaimer, problem statement, technology stack matrix, and 12 essential BCA viva topics.
-* **Error State Architecture**: Interactive diagnostic panel showcasing all 9 failure modes with clear user-facing remedies.
-* **Frontend State Architecture**: Centralized reactive state with required controller methods (`initializeApplication`, `startMonitoring`, `stopMonitoring`, `updateCameraStatus`, `updateFaceStatus`, `updateEyeStatus`, `updateDrowsinessStatus`, `updateClosureTimer`, `showAlert`, `dismissAlert`, `resetMonitoringState`, `saveSettings`, `loadSettings`).
+Although the project maintains a Python (`Flask`) backend and a structured `vision/` directory, **Phase 3 Face and Eye localization is executed entirely in the browser using MediaPipe FaceLandmarker via WebAssembly (Wasm)**. 
+
+### Why Browser-Side Vision?
+Transmitting raw video frames (at 10-30 FPS) to a Flask server over HTTP for Face Detection introduces unacceptable latency, high bandwidth consumption, and significant server load. By running the CV pipeline on the client:
+1. **Latency is minimized** (sub-20ms processing time per frame).
+2. **Privacy is guaranteed** (raw video never leaves the user's device).
+3. The server is freed up to eventually handle the heavier Machine Learning classification (Phase 5/6) using small, cropped eye images instead of full video frames.
+
+The `vision/face_detection.py` stub exists to preserve the intended backend architecture and will act as the REST endpoint handler when Phase 6 ML integration begins.
+
+---
+
+## 5. Implemented Features (Phase 1, 2, & 3)
+
+* **Phase 1 (Architecture)**: High-contrast automotive UI, 10-phase project tracker, centralized state architecture, and active error-state diagnostics.
+* **Phase 2 (Camera Pipeline)**: Secure webcam initialization, device enumeration, off-screen canvas frame extraction, and diagnostic FPS measurement.
+* **Phase 3 (Computer Vision)**:
+  * MediaPipe FaceLandmarker initialization with GPU delegation.
+  * Detection of 0, 1, or Multiple faces.
+  * Quality heuristics based on face distance/ratio.
+  * Bounding box extraction with configurable padding for both Left and Right eyes.
+  * Live overlay canvas for Face bounding box (Green) and Eye bounding boxes (Orange).
+  * Diagnostic EAR calculation for validation.
 
 ---
 
@@ -155,35 +116,10 @@ python -m unittest tests/test_architecture.py
 
 | Phase | Title | Scope & Status |
 |---|---|---|
-| **Phase 2** | Webcam Access Pipeline | `navigator.mediaDevices.getUserMedia` video stream integration, frame rendering. |
-| **Phase 3** | Face & Eye Detection (CV) | OpenCV / MediaPipe facial landmark localization & eye ROI extraction. |
 | **Phase 4** | Dataset Preparation | MRL Eye dataset ingestion, preprocessing, augmentation, and normalization. |
 | **Phase 5** | ML Model Training | CNN training in TensorFlow/Keras for OPEN vs CLOSED binary classification. |
-| **Phase 6** | Real-Time ML Inference | Connecting model weights to frame stream, producing real confidence scores. |
+| **Phase 6** | Real-Time ML Inference | Connecting model weights to extracted eye crops, producing real confidence scores. |
 | **Phase 7** | Temporal Engine & Alerts | Continuous 5.0-second closure accumulator, audio buzzer synthesis, alert trigger. |
 | **Phase 8** | Analytics & Session History | Telemetry recording, Recharts/D3 time-series graphs, vigilance scoring. |
 | **Phase 9** | Testing & Edge Cases | Low-light testing, glasses occlusion, head-pose evaluation, benchmark latency. |
 | **Phase 10** | Viva & Final Integration | Final report compilation, presentation slide deck, production packaging. |
-
----
-
-## 7. Integration Map: Connecting Phase 2 to Phase 1
-
-In **Phase 2**, the webcam video stream will directly connect to the Phase 1 architecture through the following exact points:
-
-1. **HTML `<video>` Element Injection**:
-   In `MonitorView.tsx` (or `templates/index.html`), the central `#camera-container` will host an HTML5 `<video id="webcam-stream" autoplay playsinline muted>` element.
-2. **Camera Status State Transition**:
-   On permission grant, call:
-   ```typescript
-   updateCameraStatus('CONNECTED', true);
-   ```
-   On permission denial or hardware error, call:
-   ```typescript
-   updateCameraStatus('ERROR', false);
-   setActiveError('CAMERA_PERMISSION_DENIED');
-   ```
-3. **Mirror Camera Preference**:
-   The video element will read the Phase 1 setting `settings.mirrorCamera` to conditionally apply CSS `transform: scaleX(-1)`.
-4. **Frame Extraction for Phase 3**:
-   A hidden HTML5 `<canvas id="frame-buffer">` will capture frames at 30 FPS (`requestAnimationFrame` loop) to pass raw image arrays into the Phase 3 Computer Vision pipeline.

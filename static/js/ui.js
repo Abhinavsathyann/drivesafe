@@ -48,6 +48,12 @@ const DriveSafeUI = {
       diagVideoReady: document.getElementById('diag-video-ready'),
       diagFps: document.getElementById('diag-fps'),
       diagFrames: document.getElementById('diag-frames'),
+      
+      // Phase 3 Diagnostics
+      diagFaceCount: document.getElementById('diag-face-count'),
+      diagFaceQuality: document.getElementById('diag-face-quality'),
+      diagCrops: document.getElementById('diag-crops'),
+      diagCvTime: document.getElementById('diag-cv-time'),
 
       // Monitor elements
       monitorLeftEye: document.getElementById('monitor-left-eye'),
@@ -162,6 +168,22 @@ const DriveSafeUI = {
     if (this.elements.diagFrames) {
       this.elements.diagFrames.textContent = s.framesCaptured;
     }
+
+    // Phase 3 Diagnostics
+    if (this.elements.diagFaceCount) {
+      this.elements.diagFaceCount.textContent = s.faceCount;
+    }
+    if (this.elements.diagFaceQuality) {
+      this.elements.diagFaceQuality.textContent = s.faceQuality;
+    }
+    if (this.elements.diagCrops) {
+      const l = s.leftEyeCropValid ? 'YES' : 'NO';
+      const r = s.rightEyeCropValid ? 'YES' : 'NO';
+      this.elements.diagCrops.textContent = `L: ${l} | R: ${r}`;
+    }
+    if (this.elements.diagCvTime) {
+      this.elements.diagCvTime.textContent = `${s.processTimeMs}ms | EAR: L:${s.leftEAR} R:${s.rightEAR}`;
+    }
   },
 
   updateBadges() {
@@ -176,9 +198,18 @@ const DriveSafeUI = {
     }
     if (this.elements.faceBadge) {
       this.elements.faceBadge.textContent = s.faceStatus.replace(/_/g, ' ');
+      this.elements.faceBadge.className = 'status-badge ' + (
+        s.faceStatus === 'DETECTED' ? 'status-attentive' :
+        s.faceStatus === 'MULTIPLE_FACES' ? 'status-alert' :
+        s.faceStatus === 'NOT_DETECTED' ? 'status-monitoring' : ''
+      );
     }
     if (this.elements.eyeBadge) {
       this.elements.eyeBadge.textContent = s.eyeStatus.replace(/_/g, ' ');
+      this.elements.eyeBadge.className = 'status-badge ' + (
+        s.eyeStatus === 'READY_FOR_ML' ? 'status-attentive' :
+        s.eyeStatus === 'NOT_RELIABLE' ? 'status-alert' : ''
+      );
     }
     if (this.elements.drowsinessBadge) {
       this.elements.drowsinessBadge.textContent = s.drowsinessRisk.replace(/_/g, ' ');
@@ -191,8 +222,8 @@ const DriveSafeUI = {
 
   updateMonitor() {
     const s = DriveSafeState.state;
-    if (this.elements.monitorLeftEye) this.elements.monitorLeftEye.textContent = s.leftEyeState;
-    if (this.elements.monitorRightEye) this.elements.monitorRightEye.textContent = s.rightEyeState;
+    if (this.elements.monitorLeftEye) this.elements.monitorLeftEye.textContent = s.leftEyeCropValid ? 'LOCATED (READY)' : s.leftEyeState;
+    if (this.elements.monitorRightEye) this.elements.monitorRightEye.textContent = s.rightEyeCropValid ? 'LOCATED (READY)' : s.rightEyeState;
     if (this.elements.monitorClosureDuration)
       this.elements.monitorClosureDuration.textContent = `${s.eyeClosureDuration.toFixed(1)} sec`;
     if (this.elements.monitorConfidence)

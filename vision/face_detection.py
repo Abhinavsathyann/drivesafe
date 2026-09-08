@@ -1,34 +1,28 @@
 """
-DriveSafe AI — Computer Vision Face Detection Interface
-Phase 1 Architectural Contract (Implementation reserved for Phase 3)
+DriveSafe AI — Face & Eye Detection (Python Backend Stub)
+
+NOTE on Architecture (Phase 3):
+For real-time browser privacy and ultra-low latency, the Face and Eye
+localization has been delegated to the browser using MediaPipe FaceLandmarker.
+
+Sending 10-30 raw video frames per second over HTTP to a Flask backend
+is inefficient for this architecture. The browser-side pipeline handles:
+1. Webcam capture
+2. Frame Extraction
+3. Face Detection & Landmarking
+4. Left/Right Eye localization and bounding box extraction
+
+When Phase 5/6 (Machine Learning) is implemented, the browser will extract 
+the valid eye crops (images) and send ONLY the tiny cropped images to the
+Python backend for Machine Learning Drowsiness Classification via a REST API.
+
+This file serves as a structural stub to preserve the backend architecture.
 """
 
-from typing import Optional, Tuple, Dict, Any
-
-
-class FaceDetectorInterface:
+def process_eye_crops(left_eye_b64, right_eye_b64):
     """
-    Abstract contract for face detection subsystem.
-    In Phase 3, this will be implemented using OpenCV Haar Cascades
-    or MediaPipe Face Mesh.
+    Future Phase 5/6 Hook:
+    Receives base64 encoded eye crops from the browser frontend.
+    Passes them to the ML pipeline.
     """
-
-    def __init__(self, min_detection_confidence: float = 0.5):
-        self.min_detection_confidence = min_detection_confidence
-        self.is_initialized = False
-
-    def initialize(self) -> bool:
-        """
-        Loads Haar cascade classifiers or initializes MediaPipe Face Mesh.
-        Reserved for Phase 3.
-        """
-        raise NotImplementedError("Face detection pipeline will be implemented in Phase 3.")
-
-    def detect_face(self, frame: Any) -> Tuple[bool, Optional[Dict[str, int]]]:
-        """
-        Receives an image frame (NumPy array).
-        Returns:
-            (face_detected: bool, bounding_box: Optional[Dict[str, int]])
-            where bounding_box has keys: {'x', 'y', 'w', 'h'}
-        """
-        raise NotImplementedError("Face detection will be implemented in Phase 3.")
+    pass

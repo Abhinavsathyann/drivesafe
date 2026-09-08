@@ -1,6 +1,6 @@
 {
   "name": "DriveSafe AI",
-  "description": "Real-time driver drowsiness monitoring academic prototype using computer vision and machine learning (Phase 2 Camera Pipeline).",
+  "description": "Real-time driver drowsiness monitoring academic prototype (Phase 3 Computer Vision: Face & Eye Localization).",
   "requestFramePermissions": ["camera"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

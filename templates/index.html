@@ -16,7 +16,7 @@
         <div class="brand-logo-icon">DS</div>
         <div>
           <div class="brand-title">DriveSafe<span>AI</span></div>
-          <div class="brand-subtitle">Real-Time Driver Drowsiness Monitoring • Phase 2 Camera Pipeline</div>
+          <div class="brand-subtitle">Real-Time Driver Drowsiness Monitoring • Phase 3 Computer Vision</div>
         </div>
       </div>
 
@@ -106,6 +106,10 @@
 
         <div style="display: flex; align-items: center; gap: 16px;">
           <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+            <input type="checkbox" id="vision-overlay-toggle" checked />
+            <span>Show Vision Overlay</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
             <input type="checkbox" id="mirror-preview-toggle" checked />
             <span>Mirror Video Preview</span>
           </label>
@@ -120,6 +124,9 @@
         <div class="camera-area" id="camera-container">
           <!-- Real HTML5 Video -->
           <video id="camera-video" class="camera-video mirrored" autoplay playsinline muted></video>
+
+          <!-- Vision Overlay Canvas -->
+          <canvas id="vision-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;"></canvas>
 
           <!-- Reticle -->
           <div class="camera-guide-reticle">
@@ -229,6 +236,26 @@
             <p id="diag-fps" style="font-weight: bold; margin-top: 4px;">0 FPS (10 Target)</p>
           </div>
         </div>
+
+        <h3 style="font-size: 13px; margin-top: 16px; margin-bottom: 8px; color: var(--status-yellow);">Phase 3 Computer Vision Diagnostics</h3>
+        <div class="grid-4" style="gap: 10px;">
+          <div style="background: var(--bg-main); padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <span style="color: var(--text-muted); font-size: 10px;">FACES DETECTED</span>
+            <p id="diag-face-count" style="font-weight: bold; margin-top: 4px;">0</p>
+          </div>
+          <div style="background: var(--bg-main); padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <span style="color: var(--text-muted); font-size: 10px;">FACE QUALITY</span>
+            <p id="diag-face-quality" style="font-weight: bold; margin-top: 4px;">UNKNOWN</p>
+          </div>
+          <div style="background: var(--bg-main); padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <span style="color: var(--text-muted); font-size: 10px;">EYE CROPS VALID</span>
+            <p id="diag-crops" style="font-weight: bold; margin-top: 4px;">L: NO | R: NO</p>
+          </div>
+          <div style="background: var(--bg-main); padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <span style="color: var(--text-muted); font-size: 10px;">PROC. TIME & EAR</span>
+            <p id="diag-cv-time" style="font-weight: bold; margin-top: 4px;">0ms | EAR: 0</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -322,9 +349,9 @@
           <li>Machine Learning: TensorFlow/Keras, NumPy, Scikit-learn (Planned Phase 5/6)</li>
         </ul>
 
-        <h3 style="font-family: var(--font-mono); font-size: 14px; text-transform: uppercase; margin-top: 20px;">Phase 2 Implementation</h3>
+        <h3 style="font-family: var(--font-mono); font-size: 14px; text-transform: uppercase; margin-top: 20px;">Phase 3 Implementation</h3>
         <p style="font-size: 13px; color: var(--text-secondary);">
-          Browser webcam pipeline, hardware stream lifecycle, off-screen canvas frame extraction at 10 FPS, device enumeration, and mirror mode.
+          Browser-side MediaPipe FaceLandmarker integration for ultra-low latency, real-time face detection, and left/right eye localization, replacing the need for server-side OpenCV processing.
         </p>
       </div>
     </section>
@@ -351,12 +378,16 @@
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-container">
-      <span>DriveSafe AI • BCA Final Year Project • Phase 2 Camera Pipeline</span>
+      <span>DriveSafe AI • BCA Final Year Project • Phase 3 Computer Vision</span>
       <span>Academic Prototype — Not a certified automotive safety system</span>
     </div>
   </footer>
 
+  <!-- MediaPipe Tasks Vision -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"></script>
+
   <script src="/static/js/camera.js"></script>
+  <script src="/static/js/vision.js"></script>
   <script src="/static/js/state.js"></script>
   <script src="/static/js/ui.js"></script>
   <script src="/static/js/app.js"></script>
