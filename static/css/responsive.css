@@ -1,0 +1,61 @@
+/**
+ * DriveSafe AI — Responsive Layout & Breakpoints
+ * Mobile, Tablet, Laptop, and Desktop Optimizations
+ */
+
+@media (max-width: 1024px) {
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .monitor-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 16px;
+  }
+
+  .nav-links {
+    display: none; /* Accessible via mobile dropdown or simplified toggle */
+  }
+
+  .main-container {
+    padding: 16px;
+  }
+
+  .grid-4, .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .camera-area {
+    aspect-ratio: 4 / 3;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-subtitle {
+    display: none;
+  }
+
+  .alert-box {
+    padding: 18px;
+  }
+
+  .alert-actions {
+    flex-direction: column-reverse;
+  }
+
+  .alert-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}

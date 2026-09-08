@@ -1,0 +1,20 @@
+# DriveSafe AI — Python Dependencies
+# BCA Final Year College Project
+
+# Core Web Framework
+Flask==3.0.3
+Werkzeug==3.0.3
+
+# Computer Vision (Future Phases 2, 3, 4)
+opencv-python-headless==4.9.0.80
+mediapipe==0.10.14
+
+# Machine Learning & Scientific Computing (Future Phases 4, 5, 6)
+numpy==1.26.4
+pandas==2.2.2
+scikit-learn==1.4.2
+tensorflow==2.16.1
+
+# Testing & Quality
+pytest==8.2.0
+flake8==7.0.0
